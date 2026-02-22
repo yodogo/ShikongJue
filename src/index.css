@@ -28,7 +28,7 @@ body {
 .app-container {
   height: 100%;
   width: 100%;
-  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/arena_bg.png');
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/arena_bg.png');
   background-size: cover;
   background-position: center;
   display: flex;
@@ -47,9 +47,11 @@ body {
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   color: var(--primary-gold);
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   margin-bottom: 1rem;
   text-align: center;
 }
@@ -159,9 +161,9 @@ h1, h2, h3 {
 }
 
 .battle-logs {
-  width: 300px;
-  height: 400px;
-  overflow-y: auto;
+  width: 100%;
+  height: 200px;
+  overflow-y: hidden;
   padding: 1rem;
   font-size: 0.85rem;
   line-height: 1.6;
@@ -176,19 +178,244 @@ h1, h2, h3 {
 
 /* Animations */
 @keyframes shake {
-  0% { transform: translate(1px, 1px) rotate(0deg); }
-  10% { transform: translate(-1px, -2px) rotate(-1deg); }
-  20% { transform: translate(-3px, 0px) rotate(1deg); }
-  30% { transform: translate(3px, 2px) rotate(0deg); }
-  40% { transform: translate(1px, -1px) rotate(1deg); }
-  50% { transform: translate(-1px, 2px) rotate(-1deg); }
-  60% { transform: translate(-3px, 1px) rotate(0deg); }
-  70% { transform: translate(3px, 1px) rotate(-1deg); }
-  80% { transform: translate(-1px, -1px) rotate(1deg); }
-  90% { transform: translate(1px, 2px) rotate(0deg); }
-  100% { transform: translate(1px, -2px) rotate(-1deg); }
+  0% {
+    transform: translate(1px, 1px) rotate(0deg);
+  }
+
+  10% {
+    transform: translate(-1px, -2px) rotate(-1deg);
+  }
+
+  20% {
+    transform: translate(-3px, 0px) rotate(1deg);
+  }
+
+  30% {
+    transform: translate(3px, 2px) rotate(0deg);
+  }
+
+  40% {
+    transform: translate(1px, -1px) rotate(1deg);
+  }
+
+  50% {
+    transform: translate(-1px, 2px) rotate(-1deg);
+  }
+
+  60% {
+    transform: translate(-3px, 1px) rotate(0deg);
+  }
+
+  70% {
+    transform: translate(3px, 1px) rotate(-1deg);
+  }
+
+  80% {
+    transform: translate(-1px, -1px) rotate(1deg);
+  }
+
+  90% {
+    transform: translate(1px, 2px) rotate(0deg);
+  }
+
+  100% {
+    transform: translate(1px, -2px) rotate(-1deg);
+  }
 }
 
 .animate-shake {
-  animation: shake 0.5s;
+  animation: shake 0.3s;
+}
+
+/* Realistic Full-Body Combat Animations */
+@keyframes breathe {
+  0% {
+    transform: scaleY(1);
+  }
+
+  50% {
+    transform: scaleY(1.02) scaleX(0.99) translateY(-2px);
+  }
+
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes swingRight {
+  0% {
+    transform: rotate(0deg) scale(1) translateX(0);
+  }
+
+  20% {
+    transform: rotate(-15deg) scale(1.05) translateX(-20px);
+    filter: brightness(1.2);
+  }
+
+  60% {
+    transform: rotate(30deg) scale(1.1) translateX(120px);
+    filter: brightness(1.5) drop-shadow(10px 0 15px var(--accent-crimson));
+    z-index: 50;
+  }
+
+  100% {
+    transform: rotate(0deg) scale(1) translateX(0);
+  }
+}
+
+@keyframes swingLeft {
+  0% {
+    transform: rotate(0deg) scale(1) translateX(0);
+  }
+
+  20% {
+    transform: rotate(15deg) scale(1.05) translateX(20px);
+    filter: brightness(1.2);
+  }
+
+  60% {
+    transform: rotate(-30deg) scale(1.1) translateX(-120px);
+    filter: brightness(1.5) drop-shadow(-10px 0 15px var(--primary-gold));
+    z-index: 50;
+  }
+
+  100% {
+    transform: rotate(0deg) scale(1) translateX(0);
+  }
+}
+
+.anim-idle {
+  animation: breathe 3s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+.anim-swing-right {
+  animation: swingRight 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  transform-origin: bottom center;
+  z-index: 10;
+}
+
+.anim-swing-left {
+  animation: swingLeft 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  transform-origin: bottom center;
+  z-index: 10;
+}
+
+.realistic-char {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.realistic-char img {
+  border: none !important;
+  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.8));
+  max-height: 480px;
+  object-fit: contain;
+}
+
+/* Old Combat Animations Backup */
+
+@keyframes lungeRight {
+  0% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(100px) scale(1.1);
+    filter: drop-shadow(0 0 20px var(--primary-gold));
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes lungeLeft {
+  0% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(-100px) scale(1.1);
+    filter: drop-shadow(0 0 20px var(--accent-crimson));
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes hitFlash {
+  0% {
+    filter: brightness(1);
+    transform: translateX(0);
+  }
+
+  25% {
+    filter: sepia(1) hue-rotate(-50deg) saturate(5) brightness(0.8);
+    transform: translateX(-10px);
+  }
+
+  50% {
+    filter: sepia(1) hue-rotate(-50deg) saturate(10) brightness(1.2);
+    transform: translateX(10px);
+  }
+
+  75% {
+    filter: sepia(1) hue-rotate(-50deg) saturate(5) brightness(0.8);
+    transform: translateX(-10px);
+  }
+
+  100% {
+    filter: brightness(1);
+    transform: translateX(0);
+  }
+}
+
+.anim-lunge-right {
+  animation: lungeRight 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  z-index: 10;
+}
+
+.anim-lunge-left {
+  animation: lungeLeft 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  z-index: 10;
+}
+
+.anim-hit {
+  animation: hitFlash 0.4s ease-in-out forwards;
+}
+
+/* Floating Damage Text */
+@keyframes floatUpFade {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.5);
+  }
+
+  20% {
+    opacity: 1;
+    transform: translateY(-30px) scale(1.5);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-80px) scale(1);
+  }
+}
+
+.floating-damage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ff3333;
+  font-size: 3rem;
+  font-weight: 900;
+  text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 4px 4px 10px rgba(255, 0, 0, 0.8);
+  pointer-events: none;
+  animation: floatUpFade 1s ease-out forwards;
+  z-index: 20;
 }

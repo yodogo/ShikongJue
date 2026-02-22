@@ -46,26 +46,40 @@ export class BattleEngine {
         return Math.floor(reducedDamage * variance);
     }
 
-    nextTurn() {
-        const attacker = this.charA.spd >= this.charB.spd ? this.charA : this.charB;
-        const defender = attacker === this.charA ? this.charB : this.charA;
+    executeAction(attackerName, actionType, skillIndex = -1) {
+        // Determine who is attacking
+        let attacker = this.charA.name === attackerName ? this.charA : this.charB;
+        let defender = this.charA.name === attackerName ? this.charB : this.charA;
 
-        const skill = attacker.skills[Math.floor(Math.random() * attacker.skills.length)];
-        const damage = this.calculateDamage(attacker, defender, skill);
+        if (attacker.hp <= 0 || defender.hp <= 0) return { status: "finished", winner: attacker.hp > 0 ? attacker : defender, logs: this.logs };
+
+        let actionName = "普通攻击";
+        let baseDamageMultiplier = 1.0;
+
+        if (actionType === 'skill' && skillIndex >= 0 && skillIndex < attacker.skills.length) {
+            const skill = attacker.skills[skillIndex];
+            actionName = skill.name;
+            baseDamageMultiplier = skill.damage;
+        }
+
+        const baseDamage = attacker.atk * baseDamageMultiplier;
+        const reducedDamage = Math.max(10, baseDamage - defender.def);
+        const variance = 0.9 + Math.random() * 0.2; // 0.9 to 1.1
+        const damage = Math.floor(reducedDamage * variance);
 
         defender.hp -= damage;
         if (defender.hp < 0) defender.hp = 0;
 
-        this.logs.push(`${attacker.name} 使用了 【${skill.name}】，对 ${defender.name} 造成了 ${damage} 点伤害！`);
+        this.logs.push(`${attacker.name} 使用了 【${actionName}】，对 ${defender.name} 造成了 ${damage} 点伤害！`);
 
         if (defender.hp <= 0) {
             this.logs.push(`${defender.name} 倒下了！ ${attacker.name} 获得了胜利！`);
-            return { status: "finished", winner: attacker, logs: this.logs };
+            return { status: "finished", winner: attacker, logs: this.logs, damageDealt: damage };
         }
 
-        // Swap speed to simulate turn order change or just keep it simple
-        [this.charA, this.charB] = [this.charB, this.charA];
+        // Keep latest 30 logs to avoid overflow
+        if (this.logs.length > 30) this.logs.shift();
 
-        return { status: "ongoing", logs: this.logs };
+        return { status: "ongoing", logs: this.logs, damageDealt: damage };
     }
 }
