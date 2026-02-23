@@ -19,6 +19,10 @@ function App() {
   const [p1DamageTexts, setP1DamageTexts] = useState([]);
   const [p2DamageTexts, setP2DamageTexts] = useState([]);
 
+  // Poetry effects
+  const [activeVerse, setActiveVerse] = useState(null);
+  const [inkSplashes, setInkSplashes] = useState([]);
+
   const logEndRef = useRef(null);
 
   useEffect(() => {
@@ -88,7 +92,14 @@ function App() {
 
   const startGame = (charKey) => {
     const player = characters[charKey];
-    const enemy = charKey === 'guanYu' ? characters.qinQiong : characters.guanYu;
+    // Default enemy logic: if player picks Guan Yu or Qin Qiong, pick the other warrior. 
+    // If player picks a poet, pick the other poet.
+    let enemyKey = 'qinQiong';
+    if (charKey === 'qinQiong') enemyKey = 'guanYu';
+    if (charKey === 'liBai') enemyKey = 'suShi';
+    if (charKey === 'suShi') enemyKey = 'liBai';
+
+    const enemy = characters[enemyKey];
 
     setPlayerChar({ ...player });
     setEnemyChar({ ...enemy });
@@ -119,7 +130,7 @@ function App() {
     if (playerNum === 1) setP1State(stateString);
     else setP2State(stateString);
 
-    // 2. Delay for damage calculation and hit effect to match the lunge timing (roughly middle of animation)
+    // 2. Delay for damage calculation and hit effect
     setTimeout(() => {
       const result = battleInstance.executeAction(attackerName, ...actionParams);
 
@@ -127,6 +138,15 @@ function App() {
       setPlayerChar({ ...battleInstance.charA });
       setEnemyChar({ ...battleInstance.charB });
       setBattleLogs([...result.logs]);
+
+      // Poetry Effect
+      if (result.verse) {
+        setActiveVerse(result.verse);
+        const inkId = Date.now();
+        setInkSplashes(prev => [...prev, { id: inkId }]);
+        setTimeout(() => setActiveVerse(null), 2000);
+        setTimeout(() => setInkSplashes(prev => prev.filter(i => i.id !== inkId)), 800);
+      }
 
       // Trigger defender hit animation and damage text
       const dmgId = Date.now();
@@ -169,17 +189,17 @@ function App() {
           <p style={{ color: 'var(--primary-gold)', fontSize: '1.2rem', marginBottom: '3rem' }}>
             穿越时空的巅峰决战：武圣 vs 门神
           </p>
-          <div className="selection-grid">
+          <div className="selection-grid" style={{ flexWrap: 'wrap', justifyContent: 'center' }}>
             {Object.entries(characters).map(([key, char]) => (
               <div key={key} className="char-card glass-panel" onClick={() => startGame(key)}>
-                <img src={key === 'guanYu' ? '/guan_yu.png' : '/qin_qiong.png'} alt={char.name} />
+                <img src={char.portrait} alt={char.name} />
                 <div className="char-info">
                   <h3>{char.title} · {char.name}</h3>
                   <div className="char-stats">
                     <span>生命: {char.hp}</span>
                     <span>攻击: {char.atk}</span>
-                    <span>防御: {char.def}</span>
                     <span>速度: {char.spd}</span>
+                    <span>{char.isPoet ? '博学' : '防御'}: {char.isPoet ? char.atk : char.def}</span>
                   </div>
                 </div>
               </div>
@@ -194,24 +214,33 @@ function App() {
           <div className="arena-container">
             {/* Player 1 Area */}
             <div className={`battle-char realistic-char`} style={{ position: 'relative' }}>
+              {activeVerse && <div className="poetry-overlay"><div className="poetry-verse">{activeVerse}</div></div>}
+              {inkSplashes.map(ink => <div key={ink.id} className="ink-splash" style={{ left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}></div>)}
               {p1DamageTexts.map(dt => (
-                <div key={dt.id} className="floating-damage">{dt.value}</div>
+                <div key={dt.id} className="floating-damage" style={{ color: playerChar.isPoet ? '#888' : '#ff3333' }}>{dt.value}</div>
               ))}
               <div style={{ transform: 'scaleX(1)', display: 'inline-block' }}>
                 {(() => {
-                  let imgSrc = playerChar.name === '关羽' ? '/guan_yu_combat.png' : '/qin_qiong_combat.png';
+                  let imgSrc = playerChar.name === '关羽' ? '/guan_yu_combat.png' :
+                    playerChar.name === '秦琼' ? '/qin_qiong_combat.png' :
+                      playerChar.name === '李白' ? '/li_bai_combat.png' : '/su_shi_combat.png';
                   let animClass = 'anim-idle';
                   if (p1State.startsWith('attack_')) {
-                    if (playerChar.name === '关羽') {
-                      if (p1State === 'attack_0') { imgSrc = '/guan_yu_attack_a.png'; animClass = 'anim-swing'; }
-                      else if (p1State === 'attack_1') { imgSrc = '/guan_yu_attack_s.png'; animClass = 'anim-thrust'; }
-                      else if (p1State === 'attack_2') { imgSrc = '/guan_yu_attack_d.png'; animClass = 'anim-rapid'; }
-                      else { imgSrc = '/guan_yu_attack_f.png'; animClass = 'anim-basic'; }
+                    if (playerChar.isPoet) {
+                      animClass = 'anim-write';
+                      // Poets use combat image for all attacks for now, or we could add more poses later
                     } else {
-                      if (p1State === 'attack_0') { imgSrc = '/qin_qiong_attack_h.png'; animClass = 'anim-thrust'; }
-                      else if (p1State === 'attack_1') { imgSrc = '/qin_qiong_attack_j.png'; animClass = 'anim-swing'; }
-                      else if (p1State === 'attack_2') { imgSrc = '/qin_qiong_attack_k.png'; animClass = 'anim-rapid'; }
-                      else { imgSrc = '/qin_qiong_attack_l.png'; animClass = 'anim-basic'; }
+                      if (playerChar.name === '关羽') {
+                        if (p1State === 'attack_0') { imgSrc = '/guan_yu_attack_a.png'; animClass = 'anim-swing'; }
+                        else if (p1State === 'attack_1') { imgSrc = '/guan_yu_attack_s.png'; animClass = 'anim-thrust'; }
+                        else if (p1State === 'attack_2') { imgSrc = '/guan_yu_attack_d.png'; animClass = 'anim-rapid'; }
+                        else { imgSrc = '/guan_yu_attack_f.png'; animClass = 'anim-basic'; }
+                      } else {
+                        if (p1State === 'attack_0') { imgSrc = '/qin_qiong_attack_h.png'; animClass = 'anim-thrust'; }
+                        else if (p1State === 'attack_1') { imgSrc = '/qin_qiong_attack_j.png'; animClass = 'anim-swing'; }
+                        else if (p1State === 'attack_2') { imgSrc = '/qin_qiong_attack_k.png'; animClass = 'anim-rapid'; }
+                        else { imgSrc = '/qin_qiong_attack_l.png'; animClass = 'anim-basic'; }
+                      }
                     }
                   } else if (p1State === 'hit') {
                     animClass = 'anim-hit';
@@ -224,7 +253,7 @@ function App() {
                   } else if (p1State === 'dodge') {
                     animClass = 'anim-dodge';
                   }
-                  return <img className={animClass} src={imgSrc} style={{ width: '450px' }} alt="player" />;
+                  return <img className={animClass} src={imgSrc} style={{ width: playerChar.isPoet ? '400px' : '450px' }} alt="player" />;
                 })()}
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', marginTop: '1rem' }}>
@@ -252,23 +281,29 @@ function App() {
             {/* Player 2 Area */}
             <div className={`battle-char realistic-char`} style={{ position: 'relative' }}>
               {p2DamageTexts.map(dt => (
-                <div key={dt.id} className="floating-damage">{dt.value}</div>
+                <div key={dt.id} className="floating-damage" style={{ color: enemyChar.isPoet ? '#888' : '#ff3333' }}>{dt.value}</div>
               ))}
               <div style={{ transform: 'scaleX(-1)', display: 'inline-block' }}>
                 {(() => {
-                  let imgSrc = enemyChar.name === '关羽' ? '/guan_yu_combat.png' : '/qin_qiong_combat.png';
+                  let imgSrc = enemyChar.name === '关羽' ? '/guan_yu_combat.png' :
+                    enemyChar.name === '秦琼' ? '/qin_qiong_combat.png' :
+                      enemyChar.name === '李白' ? '/li_bai_combat.png' : '/su_shi_combat.png';
                   let animClass = 'anim-idle';
                   if (p2State.startsWith('attack_')) {
-                    if (enemyChar.name === '关羽') {
-                      if (p2State === 'attack_0') { imgSrc = '/guan_yu_attack_a.png'; animClass = 'anim-swing'; }
-                      else if (p2State === 'attack_1') { imgSrc = '/guan_yu_attack_s.png'; animClass = 'anim-thrust'; }
-                      else if (p2State === 'attack_2') { imgSrc = '/guan_yu_attack_d.png'; animClass = 'anim-rapid'; }
-                      else { imgSrc = '/guan_yu_attack_f.png'; animClass = 'anim-basic'; }
+                    if (enemyChar.isPoet) {
+                      animClass = 'anim-write';
                     } else {
-                      if (p2State === 'attack_0') { imgSrc = '/qin_qiong_attack_h.png'; animClass = 'anim-thrust'; }
-                      else if (p2State === 'attack_1') { imgSrc = '/qin_qiong_attack_j.png'; animClass = 'anim-swing'; }
-                      else if (p2State === 'attack_2') { imgSrc = '/qin_qiong_attack_k.png'; animClass = 'anim-rapid'; }
-                      else { imgSrc = '/qin_qiong_attack_l.png'; animClass = 'anim-basic'; }
+                      if (enemyChar.name === '关羽') {
+                        if (p2State === 'attack_0') { imgSrc = '/guan_yu_attack_a.png'; animClass = 'anim-swing'; }
+                        else if (p2State === 'attack_1') { imgSrc = '/guan_yu_attack_s.png'; animClass = 'anim-thrust'; }
+                        else if (p2State === 'attack_2') { imgSrc = '/guan_yu_attack_d.png'; animClass = 'anim-rapid'; }
+                        else { imgSrc = '/guan_yu_attack_f.png'; animClass = 'anim-basic'; }
+                      } else {
+                        if (p2State === 'attack_0') { imgSrc = '/qin_qiong_attack_h.png'; animClass = 'anim-thrust'; }
+                        else if (p2State === 'attack_1') { imgSrc = '/qin_qiong_attack_j.png'; animClass = 'anim-swing'; }
+                        else if (p2State === 'attack_2') { imgSrc = '/qin_qiong_attack_k.png'; animClass = 'anim-rapid'; }
+                        else { imgSrc = '/qin_qiong_attack_l.png'; animClass = 'anim-basic'; }
+                      }
                     }
                   } else if (p2State === 'hit') {
                     animClass = 'anim-hit';
@@ -281,7 +316,7 @@ function App() {
                   } else if (p2State === 'dodge') {
                     animClass = 'anim-dodge';
                   }
-                  return <img className={animClass} src={imgSrc} style={{ width: '450px' }} alt="enemy" />;
+                  return <img className={animClass} src={imgSrc} style={{ width: enemyChar.isPoet ? '400px' : '450px' }} alt="enemy" />;
                 })()}
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', marginTop: '1rem' }}>
