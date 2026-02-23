@@ -521,3 +521,62 @@ h3 {
   animation: floatUpFade 1s ease-out forwards;
   z-index: 20;
 }
+/* Poetry Mode Special Effects */
+.ink-splash {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: inkExpand 0.8s ease-out forwards;
+  z-index: 15;
+}
+
+@keyframes inkExpand {
+  0% { transform: scale(0); opacity: 0; filter: blur(10px); }
+  30% { transform: scale(1.2); opacity: 1; filter: blur(2px); }
+  100% { transform: scale(1.5); opacity: 0; filter: blur(20px); }
+}
+
+.poetry-overlay {
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  text-align: center;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.poetry-verse {
+  font-family: 'STKaiti', 'KaiTi', serif;
+  font-size: 2.5rem;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.8), 2px 2px 5px #000;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  border: 1px solid var(--primary-gold);
+  animation: verseLand 2s ease-out forwards;
+  white-space: nowrap;
+}
+
+@keyframes verseLand {
+  0% { transform: translateY(-50px); opacity: 0; letter-spacing: 20px; }
+  20% { transform: translateY(0); opacity: 1; letter-spacing: 2px; }
+  80% { transform: translateY(0); opacity: 1; letter-spacing: 2px; }
+  100% { transform: translateY(20px); opacity: 0; }
+}
+
+.anim-write {
+  animation: writeAction 0.5s ease-in-out forwards;
+}
+
+@keyframes writeAction {
+  0% { transform: scale(1) rotate(0); }
+  25% { transform: scale(1.1) rotate(-5deg); filter: contrast(1.2); }
+  50% { transform: scale(1.2) rotate(5deg); filter: contrast(1.5); }
+  100% { transform: scale(1) rotate(0); }
+}
