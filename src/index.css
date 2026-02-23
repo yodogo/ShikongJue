@@ -242,7 +242,7 @@ h3 {
   }
 }
 
-@keyframes swingRight {
+@keyframes swing {
   0% {
     transform: rotate(0deg) scale(1) translateX(0);
   }
@@ -254,7 +254,7 @@ h3 {
 
   60% {
     transform: rotate(30deg) scale(1.1) translateX(120px);
-    filter: brightness(1.5) drop-shadow(10px 0 15px var(--accent-crimson));
+    filter: brightness(1.5) drop-shadow(0 0 15px var(--accent-crimson));
     z-index: 50;
   }
 
@@ -263,24 +263,78 @@ h3 {
   }
 }
 
-@keyframes swingLeft {
+@keyframes thrust {
   0% {
-    transform: rotate(0deg) scale(1) translateX(0);
+    transform: scale(1) translateX(0);
   }
 
   20% {
-    transform: rotate(15deg) scale(1.05) translateX(20px);
-    filter: brightness(1.2);
+    transform: scale(0.95) translateX(-10px);
   }
 
-  60% {
-    transform: rotate(-30deg) scale(1.1) translateX(-120px);
-    filter: brightness(1.5) drop-shadow(-10px 0 15px var(--primary-gold));
+  40% {
+    transform: scale(1.15) translateX(150px);
+    filter: brightness(1.6) drop-shadow(0 0 20px var(--primary-gold));
     z-index: 50;
   }
 
+  60% {
+    transform: scale(1.1) translateX(140px);
+  }
+
   100% {
-    transform: rotate(0deg) scale(1) translateX(0);
+    transform: scale(1) translateX(0);
+  }
+}
+
+@keyframes rapid {
+  0% {
+    transform: translateX(0) scale(1);
+  }
+
+  10% {
+    transform: translateX(30px) scale(1.1);
+    filter: drop-shadow(0 0 10px rgba(0, 255, 100, 0.8));
+    z-index: 50;
+  }
+
+  20% {
+    transform: translateX(100px) scale(1.1);
+  }
+
+  30% {
+    transform: translateX(90px) scale(1.1);
+  }
+
+  40% {
+    transform: translateX(110px) scale(1.1);
+  }
+
+  50% {
+    transform: translateX(95px) scale(1.1);
+  }
+
+  60% {
+    transform: translateX(110px) scale(1.1);
+  }
+
+  100% {
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes basic {
+  0% {
+    transform: translateX(0) rotate(0deg);
+  }
+
+  40% {
+    transform: translateX(80px) rotate(15deg) scale(1.05);
+    filter: brightness(1.2);
+  }
+
+  100% {
+    transform: translateX(0) rotate(0deg);
   }
 }
 
@@ -289,14 +343,26 @@ h3 {
   transform-origin: bottom center;
 }
 
-.anim-swing-right {
-  animation: swingRight 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+.anim-swing {
+  animation: swing 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
   transform-origin: bottom center;
   z-index: 10;
 }
 
-.anim-swing-left {
-  animation: swingLeft 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+.anim-thrust {
+  animation: thrust 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  transform-origin: bottom center;
+  z-index: 10;
+}
+
+.anim-rapid {
+  animation: rapid 0.5s linear forwards;
+  transform-origin: bottom center;
+  z-index: 10;
+}
+
+.anim-basic {
+  animation: basic 0.4s ease-out forwards;
   transform-origin: bottom center;
   z-index: 10;
 }

@@ -83,9 +83,19 @@ function App() {
   const executeCombatSequence = (attackerName, actionParams, playerNum) => {
     if (!battleInstance) return;
 
-    // 1. Attacker lunges forward
-    if (playerNum === 1) setP1State('lunging');
-    else setP2State('lunging');
+    const actionType = actionParams[0];
+    const skillIndex = actionParams[1];
+
+    let stateString = 'lunging';
+    if (actionType === 'skill') {
+      stateString = `attack_${skillIndex}`;
+    } else {
+      stateString = 'attack_basic';
+    }
+
+    // 1. Attacker lunges forward with specific pose
+    if (playerNum === 1) setP1State(stateString);
+    else setP2State(stateString);
 
     // 2. Delay for damage calculation and hit effect to match the lunge timing (roughly middle of animation)
     setTimeout(() => {
@@ -166,7 +176,26 @@ function App() {
                 <div key={dt.id} className="floating-damage">{dt.value}</div>
               ))}
               <div style={{ transform: 'scaleX(1)', display: 'inline-block' }}>
-                <img className={`${p1State === 'lunging' ? 'anim-swing' : p1State === 'hit' ? 'anim-hit' : 'anim-idle'}`} src={playerChar.name === '关羽' ? '/guan_yu_combat.png' : '/qin_qiong_combat.png'} style={{ width: '450px' }} alt="player" />
+                {(() => {
+                  let imgSrc = playerChar.name === '关羽' ? '/guan_yu_combat.png' : '/qin_qiong_combat.png';
+                  let animClass = 'anim-idle';
+                  if (p1State.startsWith('attack_')) {
+                    if (playerChar.name === '关羽') {
+                      if (p1State === 'attack_0') { imgSrc = '/guan_yu_attack_a.png'; animClass = 'anim-swing'; }
+                      else if (p1State === 'attack_1') { imgSrc = '/guan_yu_attack_s.png'; animClass = 'anim-thrust'; }
+                      else if (p1State === 'attack_2') { imgSrc = '/guan_yu_attack_d.png'; animClass = 'anim-rapid'; }
+                      else { imgSrc = '/guan_yu_attack_f.png'; animClass = 'anim-basic'; }
+                    } else {
+                      if (p1State === 'attack_0') { imgSrc = '/qin_qiong_attack_h.png'; animClass = 'anim-thrust'; }
+                      else if (p1State === 'attack_1') { imgSrc = '/qin_qiong_attack_j.png'; animClass = 'anim-swing'; }
+                      else if (p1State === 'attack_2') { imgSrc = '/qin_qiong_attack_k.png'; animClass = 'anim-rapid'; }
+                      else { imgSrc = '/qin_qiong_attack_l.png'; animClass = 'anim-basic'; }
+                    }
+                  } else if (p1State === 'hit') {
+                    animClass = 'anim-hit';
+                  }
+                  return <img className={animClass} src={imgSrc} style={{ width: '450px' }} alt="player" />;
+                })()}
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', marginTop: '1rem' }}>
                 <h3>{playerChar.name}</h3>
@@ -190,7 +219,26 @@ function App() {
                 <div key={dt.id} className="floating-damage">{dt.value}</div>
               ))}
               <div style={{ transform: 'scaleX(-1)', display: 'inline-block' }}>
-                <img className={`${p2State === 'lunging' ? 'anim-swing' : p2State === 'hit' ? 'anim-hit' : 'anim-idle'}`} src={enemyChar.name === '关羽' ? '/guan_yu_combat.png' : '/qin_qiong_combat.png'} style={{ width: '450px' }} alt="enemy" />
+                {(() => {
+                  let imgSrc = enemyChar.name === '关羽' ? '/guan_yu_combat.png' : '/qin_qiong_combat.png';
+                  let animClass = 'anim-idle';
+                  if (p2State.startsWith('attack_')) {
+                    if (enemyChar.name === '关羽') {
+                      if (p2State === 'attack_0') { imgSrc = '/guan_yu_attack_a.png'; animClass = 'anim-swing'; }
+                      else if (p2State === 'attack_1') { imgSrc = '/guan_yu_attack_s.png'; animClass = 'anim-thrust'; }
+                      else if (p2State === 'attack_2') { imgSrc = '/guan_yu_attack_d.png'; animClass = 'anim-rapid'; }
+                      else { imgSrc = '/guan_yu_attack_f.png'; animClass = 'anim-basic'; }
+                    } else {
+                      if (p2State === 'attack_0') { imgSrc = '/qin_qiong_attack_h.png'; animClass = 'anim-thrust'; }
+                      else if (p2State === 'attack_1') { imgSrc = '/qin_qiong_attack_j.png'; animClass = 'anim-swing'; }
+                      else if (p2State === 'attack_2') { imgSrc = '/qin_qiong_attack_k.png'; animClass = 'anim-rapid'; }
+                      else { imgSrc = '/qin_qiong_attack_l.png'; animClass = 'anim-basic'; }
+                    }
+                  } else if (p2State === 'hit') {
+                    animClass = 'anim-hit';
+                  }
+                  return <img className={animClass} src={imgSrc} style={{ width: '450px' }} alt="enemy" />;
+                })()}
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', marginTop: '1rem' }}>
                 <span style={{ color: 'var(--text-dim)', fontSize: '0.8rem' }}>2P 操作: H J K L</span>
