@@ -1,17 +1,24 @@
 import { useState, useEffect, useRef } from 'react';
 import './App.css';
 import './index.css';
-import { characters, BattleEngine } from './BattleEngine';
+import { BattleEngine } from './core/BattleEngine';
+import { warriorTheme } from './data/warriorTheme';
+import { poetTheme } from './data/poetTheme';
+import ThemeSelector from './components/ThemeSelector';
+import CharacterSelector from './components/CharacterSelector';
+
+const ALL_THEMES = [warriorTheme, poetTheme];
 
 function App() {
-  const [gameState, setGameState] = useState('menu'); // menu, arena, result
+  const [gameState, setGameState] = useState('theme_selection'); // theme_selection, char_selection, arena, result
+  const [selectedTheme, setSelectedTheme] = useState(null);
   const [playerChar, setPlayerChar] = useState(null);
   const [enemyChar, setEnemyChar] = useState(null);
   const [battleLogs, setBattleLogs] = useState([]);
   const [battleInstance, setBattleInstance] = useState(null);
   const [winner, setWinner] = useState(null);
 
-  // Animation states: 'idle', 'lunging', 'hit'
+  // Animation states
   const [p1State, setP1State] = useState('idle');
   const [p2State, setP2State] = useState('idle');
 
@@ -90,15 +97,17 @@ function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [gameState, winner, playerChar, enemyChar, p1State, p2State]);
 
-  const startGame = (charKey) => {
-    const player = characters[charKey];
-    // Default enemy logic: if player picks Guan Yu or Qin Qiong, pick the other warrior. 
-    // If player picks a poet, pick the other poet.
-    let enemyKey = 'qinQiong';
-    if (charKey === 'qinQiong') enemyKey = 'guanYu';
-    if (charKey === 'liBai') enemyKey = 'suShi';
-    if (charKey === 'suShi') enemyKey = 'liBai';
+  const handleHandleThemeSelect = (theme) => {
+    setSelectedTheme(theme);
+    setGameState('char_selection');
+  };
 
+  const handleStartBattle = (charKey) => {
+    const characters = selectedTheme.characters;
+    const player = characters[charKey];
+
+    // Pick the other character in the theme
+    const enemyKey = Object.keys(characters).find(k => k !== charKey);
     const enemy = characters[enemyKey];
 
     setPlayerChar({ ...player });
@@ -126,20 +135,16 @@ function App() {
       stateString = 'attack_basic';
     }
 
-    // 1. Attacker lunges forward with specific pose
     if (playerNum === 1) setP1State(stateString);
     else setP2State(stateString);
 
-    // 2. Delay for damage calculation and hit effect
     setTimeout(() => {
       const result = battleInstance.executeAction(attackerName, ...actionParams);
 
-      // Update Health
       setPlayerChar({ ...battleInstance.charA });
       setEnemyChar({ ...battleInstance.charB });
       setBattleLogs([...result.logs]);
 
-      // Poetry Effect
       if (result.verse) {
         setActiveVerse(result.verse);
         const inkId = Date.now();
@@ -148,7 +153,6 @@ function App() {
         setTimeout(() => setInkSplashes(prev => prev.filter(i => i.id !== inkId)), 800);
       }
 
-      // Trigger defender hit animation and damage text
       const dmgId = Date.now();
       if (playerNum === 1) {
         setP2State('hit');
@@ -158,7 +162,6 @@ function App() {
         setP1DamageTexts(prev => [...prev, { id: dmgId, value: `-${result.damageDealt}` }]);
       }
 
-      // Clear states after animation completes
       setTimeout(() => {
         setP1State('idle');
         setP2State('idle');
@@ -167,46 +170,24 @@ function App() {
           setWinner(result.winner);
           setTimeout(() => setGameState('result'), 1500);
         }
-      }, 500); // 500ms to recover to idle
+      }, 500);
 
-      // Clean up floating text after 1s
       setTimeout(() => {
-        if (playerNum === 1) {
-          setP2DamageTexts(prev => prev.filter(t => t.id !== dmgId));
-        } else {
-          setP1DamageTexts(prev => prev.filter(t => t.id !== dmgId));
-        }
+        if (playerNum === 1) setP2DamageTexts(prev => prev.filter(t => t.id !== dmgId));
+        else setP1DamageTexts(prev => prev.filter(t => t.id !== dmgId));
       }, 1000);
 
-    }, 200); // 200ms delay to simulate travel time
+    }, 200);
   };
 
   return (
-    <div className="app-container">
-      {gameState === 'menu' && (
-        <div className="glass-panel text-center">
-          <h1 style={{ fontSize: '3.5rem', marginBottom: '2rem' }}>关公战秦琼</h1>
-          <p style={{ color: 'var(--primary-gold)', fontSize: '1.2rem', marginBottom: '3rem' }}>
-            穿越时空的巅峰决战：武圣 vs 门神
-          </p>
-          <div className="selection-grid" style={{ flexWrap: 'wrap', justifyContent: 'center' }}>
-            {Object.entries(characters).map(([key, char]) => (
-              <div key={key} className="char-card glass-panel" onClick={() => startGame(key)}>
-                <img src={char.portrait} alt={char.name} />
-                <div className="char-info">
-                  <h3>{char.title} · {char.name}</h3>
-                  <div className="char-stats">
-                    <span>生命: {char.hp}</span>
-                    <span>攻击: {char.atk}</span>
-                    <span>速度: {char.spd}</span>
-                    <span>{char.isPoet ? '博学' : '防御'}: {char.isPoet ? char.atk : char.def}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-          <p style={{ marginTop: '2rem', color: 'var(--text-dim)' }}>点击卡片选择你的英雄</p>
-        </div>
+    <div className="app-container" style={{ backgroundImage: gameState === 'arena' ? `url(${selectedTheme?.background})` : 'none' }}>
+      {gameState === 'theme_selection' && (
+        <ThemeSelector themes={ALL_THEMES} onSelect={handleHandleThemeSelect} />
+      )}
+
+      {gameState === 'char_selection' && (
+        <CharacterSelector theme={selectedTheme} onSelect={handleStartBattle} onBack={() => setGameState('theme_selection')} />
       )}
 
       {gameState === 'arena' && (
@@ -221,38 +202,22 @@ function App() {
               ))}
               <div style={{ transform: 'scaleX(1)', display: 'inline-block' }}>
                 {(() => {
-                  let imgSrc = playerChar.name === '关羽' ? '/guan_yu_combat.png' :
-                    playerChar.name === '秦琼' ? '/qin_qiong_combat.png' :
-                      playerChar.name === '李白' ? '/li_bai_combat.png' : '/su_shi_combat.png';
+                  let imgSrc = playerChar.combatImg;
                   let animClass = 'anim-idle';
                   if (p1State.startsWith('attack_')) {
                     if (playerChar.isPoet) {
                       animClass = 'anim-write';
-                      // Poets use combat image for all attacks for now, or we could add more poses later
                     } else {
-                      if (playerChar.name === '关羽') {
-                        if (p1State === 'attack_0') { imgSrc = '/guan_yu_attack_a.png'; animClass = 'anim-swing'; }
-                        else if (p1State === 'attack_1') { imgSrc = '/guan_yu_attack_s.png'; animClass = 'anim-thrust'; }
-                        else if (p1State === 'attack_2') { imgSrc = '/guan_yu_attack_d.png'; animClass = 'anim-rapid'; }
-                        else { imgSrc = '/guan_yu_attack_f.png'; animClass = 'anim-basic'; }
-                      } else {
-                        if (p1State === 'attack_0') { imgSrc = '/qin_qiong_attack_h.png'; animClass = 'anim-thrust'; }
-                        else if (p1State === 'attack_1') { imgSrc = '/qin_qiong_attack_j.png'; animClass = 'anim-swing'; }
-                        else if (p1State === 'attack_2') { imgSrc = '/qin_qiong_attack_k.png'; animClass = 'anim-rapid'; }
-                        else { imgSrc = '/qin_qiong_attack_l.png'; animClass = 'anim-basic'; }
-                      }
+                      const idx = p1State.split('_')[1];
+                      imgSrc = playerChar.attackImages[idx === 'basic' ? 'basic' : idx] || playerChar.combatImg;
+                      animClass = idx === '0' ? 'anim-swing' : idx === '1' ? 'anim-thrust' : idx === '2' ? 'anim-rapid' : 'anim-basic';
                     }
-                  } else if (p1State === 'hit') {
-                    animClass = 'anim-hit';
-                  } else if (p1State === 'jump') {
-                    animClass = 'anim-jump';
-                  } else if (p1State === 'move_forward') {
-                    animClass = 'anim-forward';
-                  } else if (p1State === 'move_back') {
-                    animClass = 'anim-backward';
-                  } else if (p1State === 'dodge') {
-                    animClass = 'anim-dodge';
-                  }
+                  } else if (p1State === 'hit') animClass = 'anim-hit';
+                  else if (p1State === 'jump') animClass = 'anim-jump';
+                  else if (p1State === 'move_forward') animClass = 'anim-forward';
+                  else if (p1State === 'move_back') animClass = 'anim-backward';
+                  else if (p1State === 'dodge') animClass = 'anim-dodge';
+
                   return <img className={animClass} src={imgSrc} style={{ width: playerChar.isPoet ? '400px' : '450px' }} alt="player" />;
                 })()}
               </div>
@@ -264,12 +229,6 @@ function App() {
                 <div className="hp-bar-fill" style={{ width: `${(playerChar.hp / playerChar.maxHp) * 100}%` }}></div>
               </div>
               <p style={{ margin: '0.5rem 0' }}>HP: {playerChar.hp} / {playerChar.maxHp}</p>
-              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '0.5rem' }}>
-                <span style={{ background: '#222', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem' }}>Q: 后退</span>
-                <span style={{ background: '#222', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem' }}>W: 跳跃</span>
-                <span style={{ background: '#222', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem' }}>E: 前进</span>
-                <span style={{ background: '#222', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem' }}>R: 躲闪</span>
-              </div>
               <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
                 <span style={{ background: '#333', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.8rem', opacity: p1State !== 'idle' ? 0.5 : 1 }}>A: {playerChar.skills[0].name}</span>
                 <span style={{ background: '#333', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.8rem', opacity: p1State !== 'idle' ? 0.5 : 1 }}>S: {playerChar.skills[1].name}</span>
@@ -285,37 +244,22 @@ function App() {
               ))}
               <div style={{ transform: 'scaleX(-1)', display: 'inline-block' }}>
                 {(() => {
-                  let imgSrc = enemyChar.name === '关羽' ? '/guan_yu_combat.png' :
-                    enemyChar.name === '秦琼' ? '/qin_qiong_combat.png' :
-                      enemyChar.name === '李白' ? '/li_bai_combat.png' : '/su_shi_combat.png';
+                  let imgSrc = enemyChar.combatImg;
                   let animClass = 'anim-idle';
                   if (p2State.startsWith('attack_')) {
                     if (enemyChar.isPoet) {
                       animClass = 'anim-write';
                     } else {
-                      if (enemyChar.name === '关羽') {
-                        if (p2State === 'attack_0') { imgSrc = '/guan_yu_attack_a.png'; animClass = 'anim-swing'; }
-                        else if (p2State === 'attack_1') { imgSrc = '/guan_yu_attack_s.png'; animClass = 'anim-thrust'; }
-                        else if (p2State === 'attack_2') { imgSrc = '/guan_yu_attack_d.png'; animClass = 'anim-rapid'; }
-                        else { imgSrc = '/guan_yu_attack_f.png'; animClass = 'anim-basic'; }
-                      } else {
-                        if (p2State === 'attack_0') { imgSrc = '/qin_qiong_attack_h.png'; animClass = 'anim-thrust'; }
-                        else if (p2State === 'attack_1') { imgSrc = '/qin_qiong_attack_j.png'; animClass = 'anim-swing'; }
-                        else if (p2State === 'attack_2') { imgSrc = '/qin_qiong_attack_k.png'; animClass = 'anim-rapid'; }
-                        else { imgSrc = '/qin_qiong_attack_l.png'; animClass = 'anim-basic'; }
-                      }
+                      const idx = p2State.split('_')[1];
+                      imgSrc = enemyChar.attackImages[idx === 'basic' ? 'basic' : idx] || enemyChar.combatImg;
+                      animClass = idx === '0' ? 'anim-swing' : idx === '1' ? 'anim-thrust' : idx === '2' ? 'anim-rapid' : 'anim-basic';
                     }
-                  } else if (p2State === 'hit') {
-                    animClass = 'anim-hit';
-                  } else if (p2State === 'jump') {
-                    animClass = 'anim-jump';
-                  } else if (p2State === 'move_forward') {
-                    animClass = 'anim-forward';
-                  } else if (p2State === 'move_back') {
-                    animClass = 'anim-backward';
-                  } else if (p2State === 'dodge') {
-                    animClass = 'anim-dodge';
-                  }
+                  } else if (p2State === 'hit') animClass = 'anim-hit';
+                  else if (p2State === 'jump') animClass = 'anim-jump';
+                  else if (p2State === 'move_forward') animClass = 'anim-forward';
+                  else if (p2State === 'move_back') animClass = 'anim-backward';
+                  else if (p2State === 'dodge') animClass = 'anim-dodge';
+
                   return <img className={animClass} src={imgSrc} style={{ width: enemyChar.isPoet ? '400px' : '450px' }} alt="enemy" />;
                 })()}
               </div>
@@ -327,12 +271,6 @@ function App() {
                 <div className="hp-bar-fill" style={{ width: `${(enemyChar.hp / enemyChar.maxHp) * 100}%` }}></div>
               </div>
               <p style={{ margin: '0.5rem 0' }}>HP: {enemyChar.hp} / {enemyChar.maxHp}</p>
-              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '0.5rem' }}>
-                <span style={{ background: '#222', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem' }}>U: 后退</span>
-                <span style={{ background: '#222', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem' }}>I: 跳跃</span>
-                <span style={{ background: '#222', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem' }}>O: 前进</span>
-                <span style={{ background: '#222', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem' }}>P: 躲闪</span>
-              </div>
               <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
                 <span style={{ background: '#333', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.8rem', opacity: p2State !== 'idle' ? 0.5 : 1 }}>H: {enemyChar.skills[0].name}</span>
                 <span style={{ background: '#333', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.8rem', opacity: p2State !== 'idle' ? 0.5 : 1 }}>J: {enemyChar.skills[1].name}</span>
@@ -342,7 +280,6 @@ function App() {
             </div>
           </div>
 
-          {/* Battle Logs Bottom */}
           <div className="battle-logs glass-panel" style={{ marginTop: '2rem', width: '80%', height: '200px' }}>
             <h3 style={{ marginBottom: '0.5rem' }}>对阵记录</h3>
             <div style={{ height: '120px', overflowY: 'auto' }}>
@@ -358,8 +295,10 @@ function App() {
       {gameState === 'result' && (
         <div className="glass-panel text-center">
           <h2 style={{ fontSize: '3rem' }}>{winner.name} 获得了最终胜利！</h2>
-          <p style={{ fontSize: '1.5rem', color: 'var(--primary-gold)', margin: '2rem 0' }}>英雄气短，儿女情长。这一战，足以名垂青史！</p>
-          <button className="btn-premium" onClick={() => setGameState('menu')}>重回巅峰</button>
+          <p style={{ fontSize: '1.5rem', color: 'var(--primary-gold)', margin: '2rem 0' }}>
+            {selectedTheme.id === 'poet' ? '江山代有才人出，各领风骚数百年。' : '英雄气短，儿女情长。这一战，足以名垂青史！'}
+          </p>
+          <button className="btn-premium" onClick={() => setGameState('theme_selection')}>返回主界面</button>
         </div>
       )}
     </div>
