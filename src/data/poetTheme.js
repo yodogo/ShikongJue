@@ -1,8 +1,9 @@
 export const poetTheme = {
     id: 'poet',
-    name: "文斗：李白对苏轼",
+    name: "文争：李白对苏轼",
     description: "千古一瞬的文坛较量：诗仙 vs 词圣",
     background: "/arena_bg.png", // Could be a different one later
+    cover: '/themes/poet/cover.png',
     characters: {
         liBai: {
             name: "李白",
@@ -19,13 +20,14 @@ export const poetTheme = {
                 { name: "行路难", damage: 2.2, verse: "长风破浪会有时，直挂云帆济沧海。" }
             ],
             portrait: "/themes/poet/li_bai.png",
-            combatImg: "/themes/poet/li_bai_combat.png"
+            combatImg: "/themes/poet/li_bai.png",
+            needsFlip: false
         },
         suShi: {
             name: "苏轼",
             title: "词圣",
-            hp: 1050,
-            maxHp: 1050,
+            hp: 1000,
+            maxHp: 1000,
             atk: 145,
             def: 70,
             spd: 80,
@@ -36,7 +38,8 @@ export const poetTheme = {
                 { name: "定风波", damage: 2.0, verse: "回首向来萧瑟处，归去，也无风雨也无晴。" }
             ],
             portrait: "/themes/poet/su_shi.png",
-            combatImg: "/themes/poet/su_shi_combat.png"
+            combatImg: "/themes/poet/su_shi.png",
+            needsFlip: true
         }
     }
 };

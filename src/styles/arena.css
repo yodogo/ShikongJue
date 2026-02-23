@@ -1,0 +1,80 @@
+/**
+ * Arena styles - Battle arena layout and character display
+ */
+
+.arena-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-md) 0;
+}
+
+.arena-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  max-width: 1200px;
+  min-height: 60vh;
+}
+
+.ff-arena {
+  align-items: flex-start;
+  height: 100%;
+}
+
+.battle-char {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  position: relative;
+}
+
+.ff-arena .battle-char:last-child {
+  align-items: flex-end;
+}
+
+.realistic-char {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.realistic-char img {
+  border: none !important;
+  filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.4)) sepia(0.2) contrast(1.1) brightness(1.1);
+  max-height: 520px;
+  object-fit: contain;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.realistic-char img:hover {
+  filter: drop-shadow(0 0 40px rgba(212, 175, 55, 0.7)) sepia(0) contrast(1.2) brightness(1.2);
+}
+
+.ff-char-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  flex: 0 0 auto;
+}
+
+.ff-arena .battle-char:not(.char-reciting) img {
+  animation: none !important;
+}
+
+.char-reciting {
+  filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.6));
+}
+
+.poetry-stage {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}

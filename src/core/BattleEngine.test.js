@@ -50,13 +50,13 @@ describe('BattleEngine', () => {
     it('should produce warrior-specific logs', () => {
         engine.executeAction("关羽", "attack", -1);
         expect(engine.logs[0]).toContain("使用了");
-        expect(engine.logs[0]).toContain("点伤害");
+        expect(engine.logs[1]).toContain("点伤害");
     });
 
     it('should produce poet-specific logs', () => {
         engine.executeAction("李白", "skill", 0);
         expect(engine.logs[0]).toContain("吟诵了");
-        expect(engine.logs[0]).toContain("点心神冲击");
+        expect(engine.logs[1]).toContain("点心神冲击");
     });
 
     it('should detect when a character is defeated', () => {

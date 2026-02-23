@@ -1,0 +1,187 @@
+/**
+ * Animation styles - Keyframes and animation classes
+ */
+
+/* Floating Damage Text */
+@keyframes floatUpFade {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.5);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(-30px) scale(1.5);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-80px) scale(1);
+  }
+}
+
+.floating-damage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ff3333;
+  font-size: 3rem;
+  font-weight: 900;
+  text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 4px 4px 10px rgba(255, 0, 0, 0.8);
+  pointer-events: none;
+  animation: floatUpFade 1s ease-out forwards;
+  z-index: 20;
+}
+
+/* Shake Animation */
+@keyframes shake {
+  0%, 100% { transform: translate(1px, 1px) rotate(0deg); }
+  10% { transform: translate(-1px, -2px) rotate(-1deg); }
+  20% { transform: translate(-3px, 0px) rotate(1deg); }
+  30% { transform: translate(3px, 2px) rotate(0deg); }
+  40% { transform: translate(1px, -1px) rotate(1deg); }
+  50% { transform: translate(-1px, 2px) rotate(-1deg); }
+  60% { transform: translate(-3px, 1px) rotate(0deg); }
+  70% { transform: translate(3px, 1px) rotate(-1deg); }
+  80% { transform: translate(-1px, -1px) rotate(1deg); }
+  90% { transform: translate(1px, 2px) rotate(0deg); }
+}
+
+.animate-shake {
+  animation: shake 0.3s;
+}
+
+/* Character Animations */
+@keyframes breathe {
+  0% { transform: scaleY(1); }
+  50% { transform: scaleY(1.02) scaleX(0.99) translateY(-2px); }
+  100% { transform: scaleY(1); }
+}
+
+@keyframes swing {
+  0% { transform: rotate(0deg) scale(1) translateX(0); }
+  20% { transform: rotate(-15deg) scale(1.05) translateX(-20px); filter: brightness(1.2); }
+  60% { transform: rotate(30deg) scale(1.1) translateX(120px); filter: brightness(1.5) drop-shadow(0 0 15px var(--accent-crimson)); z-index: 50; }
+  100% { transform: rotate(0deg) scale(1) translateX(0); }
+}
+
+@keyframes thrust {
+  0% { transform: scale(1) translateX(0); }
+  20% { transform: scale(0.95) translateX(-10px); }
+  40% { transform: scale(1.15) translateX(150px); filter: brightness(1.6) drop-shadow(0 0 20px var(--primary-gold)); z-index: 50; }
+  60% { transform: scale(1.1) translateX(140px); }
+  100% { transform: scale(1) translateX(0); }
+}
+
+@keyframes rapid {
+  0% { transform: translateX(0) scale(1); }
+  10% { transform: translateX(30px) scale(1.1); filter: drop-shadow(0 0 10px rgba(0, 255, 100, 0.8)); z-index: 50; }
+  20% { transform: translateX(100px) scale(1.1); }
+  30% { transform: translateX(90px) scale(1.1); }
+  40% { transform: translateX(110px) scale(1.1); }
+  50% { transform: translateX(95px) scale(1.1); }
+  60% { transform: translateX(110px) scale(1.1); }
+  100% { transform: translateX(0) scale(1); }
+}
+
+@keyframes basic {
+  0% { transform: translateX(0) rotate(0deg); }
+  40% { transform: translateX(80px) rotate(15deg) scale(1.05); filter: brightness(1.2); }
+  100% { transform: translateX(0) rotate(0deg); }
+}
+
+@keyframes jump {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-120px) scaleY(0.9); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes moveForward {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(100px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes moveBackward {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(-85px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes dodge {
+  0% { transform: translateX(0) skew(0deg); opacity: 1; }
+  25%, 75% { transform: translateX(-40px) skew(-15deg); opacity: 0.6; filter: blur(2px); }
+  100% { transform: translateX(0) skew(0deg); opacity: 1; }
+}
+
+@keyframes hitFlash {
+  0% { filter: brightness(1); transform: translateX(0); }
+  25% { filter: sepia(1) hue-rotate(-50deg) saturate(5) brightness(0.8); transform: translateX(-10px); }
+  50% { filter: sepia(1) hue-rotate(-50deg) saturate(10) brightness(1.2); transform: translateX(10px); }
+  75% { filter: sepia(1) hue-rotate(-50deg) saturate(5) brightness(0.8); transform: translateX(-10px); }
+  100% { filter: brightness(1); transform: translateX(0); }
+}
+
+@keyframes writeAction {
+  0% { transform: scale(1) rotate(0); }
+  25% { transform: scale(1.1) rotate(-5deg); filter: contrast(1.2); }
+  50% { transform: scale(1.2) rotate(5deg); filter: contrast(1.5); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+@keyframes glow-gold {
+  from { box-shadow: 0 0 5px rgba(212, 175, 55, 0.1); }
+  to { box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
+}
+
+@keyframes pulse-gold {
+  0%, 100% { color: var(--primary-gold); text-shadow: 0 0 10px var(--primary-gold); }
+  50% { color: #ff9900; text-shadow: 0 0 20px #ff9900; }
+}
+
+@keyframes verseLand {
+  0% { transform: translateY(-50px); opacity: 0; letter-spacing: 20px; }
+  20% { transform: translateY(0); opacity: 1; letter-spacing: 2px; }
+  80% { transform: translateY(0); opacity: 1; letter-spacing: 2px; }
+  100% { transform: translateY(20px); opacity: 0; }
+}
+
+/* Animation Classes */
+.anim-idle { animation: breathe 3s ease-in-out infinite; transform-origin: bottom center; }
+.anim-swing { animation: swing 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; transform-origin: bottom center; z-index: 10; }
+.anim-thrust { animation: thrust 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; transform-origin: bottom center; z-index: 10; }
+.anim-rapid { animation: rapid 0.5s linear forwards; transform-origin: bottom center; z-index: 10; }
+.anim-basic { animation: basic 0.4s ease-out forwards; transform-origin: bottom center; z-index: 10; }
+.anim-jump { animation: jump 0.6s cubic-bezier(0.45, 0, 0.55, 1) forwards; transform-origin: bottom center; }
+.anim-forward { animation: moveForward 0.4s ease-out forwards; transform-origin: bottom center; }
+.anim-backward { animation: moveBackward 0.4s ease-out forwards; transform-origin: bottom center; }
+.anim-dodge { animation: dodge 0.4s ease-in-out forwards; transform-origin: bottom center; }
+.anim-hit { animation: hitFlash 0.4s ease-in-out forwards; }
+.anim-write { animation: writeAction 0.5s ease-in-out forwards; }
+
+/* Special Effects */
+.aura-glow {
+  position: absolute;
+  width: 80%;
+  height: 80%;
+  background: radial-gradient(ellipse at center, rgba(212, 175, 55, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.ink-splash {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: inkExpand 0.8s ease-out forwards;
+  z-index: 15;
+}
+
+@keyframes inkExpand {
+  0% { transform: scale(0); opacity: 0; filter: blur(10px); }
+  30% { transform: scale(1.2); opacity: 1; filter: blur(2px); }
+  100% { transform: scale(1.5); opacity: 0; filter: blur(20px); }
+}

@@ -2,7 +2,8 @@ export const warriorTheme = {
     id: 'warrior',
     name: "武斗：关公战秦琼",
     description: "穿越时空的巅峰决战：武圣 vs 门神",
-    background: "/arena_bg.png",
+    background: "/themes/warrior/warrior_bg.png",
+    cover: '/themes/warrior/cover.png',
     characters: {
         guanYu: {
             name: "关羽",
@@ -24,7 +25,8 @@ export const warriorTheme = {
                 1: "/themes/warrior/guan_yu_attack_s.png",
                 2: "/themes/warrior/guan_yu_attack_d.png",
                 basic: "/themes/warrior/guan_yu_attack_f.png"
-            }
+            },
+            needsFlip: false
         },
         qinQiong: {
             name: "秦琼",
@@ -46,7 +48,8 @@ export const warriorTheme = {
                 1: "/themes/warrior/qin_qiong_attack_j.png",
                 2: "/themes/warrior/qin_qiong_attack_k.png",
                 basic: "/themes/warrior/qin_qiong_attack_l.png"
-            }
+            },
+            needsFlip: false
         }
     }
 };

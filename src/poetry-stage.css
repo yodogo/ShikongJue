@@ -1,0 +1,113 @@
+/* Poetry Stage for Flying Flower Mode */
+.poetry-stage {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  position: relative;
+}
+
+.ff-center-display {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.ff-keyword-circle {
+  width: 180px;
+  height: 180px;
+  border: 3px solid var(--primary-gold);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 20px var(--primary-gold);
+}
+
+.ff-keyword-circle span {
+  color: var(--primary-gold);
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.ff-keyword-circle h1 {
+  color: var(--primary-gold);
+  font-size: 3rem;
+  margin: 0;
+  font-weight: 900;
+}
+
+.ff-center-display p {
+  color: #ccc;
+  font-size: 1rem;
+  margin: 0;
+  min-height: 1.5rem;
+}
+
+.pulse-gold {
+  animation: pulse-gold 1s infinite;
+}
+
+@keyframes pulse-gold {
+  0%, 100% {
+    color: var(--primary-gold);
+    text-shadow: 0 0 10px var(--primary-gold);
+  }
+  50% {
+    color: #ff9900;
+    text-shadow: 0 0 20px #ff9900;
+  }
+}
+
+.ff-char-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  flex: 0 0 auto;
+  max-width: 350px;
+}
+
+.ff-hand-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.8rem;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.ff-verse-card {
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid var(--primary-gold);
+  border-radius: 8px;
+  padding: 0.8rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.75rem;
+  line-height: 1.3;
+  color: #ddd;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.ff-verse-card:hover {
+  background: rgba(212, 175, 55, 0.3);
+  box-shadow: 0 0 15px var(--primary-gold);
+  transform: translateY(-2px);
+}
+
+.ff-verse-card.selected {
+  background: rgba(212, 175, 55, 0.5);
+  box-shadow: 0 0 20px var(--primary-gold);
+  border-color: #ffff00;
+}
