@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**GuanVsQin** (关公战秦琼) is a React-based web game featuring a dual-mode battle system:
+**ShikongJue** (时空决) is a React-based web game featuring a dual-mode battle system:
 - **Warrior Mode**: Classic combat between Guan Yu and Qin Qiong (武斗)
 - **Poet Mode**: Poetry-based battles between Li Bai and Su Shi (文争)
 

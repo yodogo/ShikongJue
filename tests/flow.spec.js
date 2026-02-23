@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('GuanVsQin Game Flow', () => {
+test.describe('ShikongJue Game Flow', () => {
     test.beforeEach(async ({ page }) => {
         await page.goto('/');
         await page.waitForLoadState('networkidle');
