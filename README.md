@@ -1,63 +1,185 @@
-# 关公战秦琼 (Guan Yu vs Qin Qiong)
+# 时空决 (ShikongJue)
 
-一个基于 **React** 和 **Vite** 开发的巅峰决战小游戏。穿越时空的限制，让三国武圣关羽与唐代名将秦琼在沙场一决高下，或让诗仙李白与词圣苏轼进行一场文采斐然的“飞花令”对决。
+A React-based web game featuring cross-temporal battles between legendary Chinese historical figures. Engage in epic combat between warriors from different eras, or witness poetic duels between renowned literary masters.
 
-![Game Preview](public/battle_preview.png)
+![Theme Selection Screen](public/theme_selection.png)
 
-## 🎮 游戏特色
+## Game Features
 
-- **多时空阵容**：武圣、门神、诗仙、词圣，提供了文、武两种截然不同的战斗模式。
-- **独创战斗引擎**：
-  - **武斗系统**：支持多种技能、普通攻击以及位移（跳跃、冲刺、躲闪）。
-  - **文争系统**：水墨风动画配合诗词吟诵，体验独特的精神对战。
-- **动态视觉**：基于写实立绘的 CSS3 动作序列与华丽的水墨特效。
+### Dual Battle Modes
 
-## ⌨️ 操作说明
+- **Warrior Mode (武斗)**: Classic action combat between legendary warriors
+  - Guan Yu (三国武圣) vs Qin Qiong (唐代门神)
+  - Action-based combat with skills, movement, and special attacks
 
-游戏支持双人同屏对战：
+- **Poet Mode (文争)**: Poetry-based battles between literary masters
+  - **Standard Mode**: Li Bai (诗仙) vs Su Shi (词圣) with verse-based skills
+  - **Flying Flower Mode (飞花令)**: Turn-based card game featuring classical Chinese poetry
 
-### 1P - 关羽 (左侧)
-| 按键 | 功能 |
-| :--- | :--- |
-| **Q / E** | 向后 / 向前移动 |
-| **W / R** | 跳跃 / 躲闪 |
-| **A / S / D** | 释放技能 (青龙斩 / 威震华夏 / 单刀赴会) |
-| **F** | 普通攻击 |
+### Visual Effects
+- Dynamic CSS3 character animations (idle, attack, hit, jump, dodge)
+- Glass morphism UI with `.glass-panel` styling
+- Ink splash effects for poet mode skills
+- Floating damage numbers and combat feedback
 
-### 2P - 秦琼 (右侧)
-| 按键 | 功能 |
-| :--- | :--- |
-| **U / O** | 向后 / 向前移动 |
-| **I / P** | 跳跃 / 躲闪 |
-| **H / J / K** | 释放技能 (撒手锏 / 马踏黄河 / 双锏无双) |
-| **L** | 普通攻击 |
+## Game State Flow
 
-## 🛠️ 技术栈
+The game uses a centralized state machine with these stages:
+```
+theme_selection → mode_selection → keyword_selection → char_selection → arena → result
+```
 
-- **前端框架**: React (Hooks, Refs)
-- **构建工具**: Vite
-- **动画/样式**: Vanilla CSS (Keyframe Animations, HSL Colors)
-- **图形资源**: 
-  - 角色立绘：高质量动态 Pose
-  - 打击感：浮动伤害数值与击退效果
+## Controls
 
-## 🚀 快速开始
+### Warrior Mode (Keyboard-based)
 
-1. **安装依赖**：
-   ```bash
-   npm install
-   ```
+**Player 1 (Left)**
+| Key | Action |
+|:---|:---|
+| Q / E | Move backward / forward |
+| W / R | Jump / Dodge |
+| A / S / D | Skills (青龙斩 / 威震华夏 / 单刀赴会) |
+| F | Basic attack |
 
-2. **启动开发服务器**：
-   ```bash
-   npm run dev
-   ```
+**Player 2 (Right)**
+| Key | Action |
+|:---|:---|
+| U / O | Move backward / forward |
+| I / P | Jump / Dodge |
+| H / J / K | Skills (撒手锏 / 马踏黄河 / 双锏无双) |
+| L | Basic attack |
 
-3. **构建生产版本**：
-   ```bash
-   npm run build
-   ```
+### Poet Mode - Standard (Keyboard-based)
 
-## 📄 许可证
+Same controls as Warrior Mode - skills trigger poetry-based attacks.
 
-基于 MIT 协议开源。
+**Player 1 (Left) - Li Bai**
+| Key | Action |
+|:---|:---|
+| Q / E | Move backward / forward |
+| W / R | Jump / Dodge |
+| A / S / D | Skills (举杯邀月 / 将进酒 / 梦游天姥) |
+| F | Basic attack |
+
+**Player 2 (Right) - Su Shi**
+| Key | Action |
+|:---|:---|
+| U / O | Move backward / forward |
+| I / P | Jump / Dodge |
+| H / J / K | Skills (大江东去 / 水调歌头 / 赤壁怀古) |
+| L | Basic attack |
+
+### Poet Mode - Flying Flower (飞花令, Turn-based)
+
+Click poetry cards to select verses containing the required keyword (月, 花, 酒, 春). The AI opponent will automatically respond with matching verses from the poetry database.
+
+## Tech Stack
+
+- **Framework**: React 19.2 with Hooks
+- **Build Tool**: Vite 7.x
+- **Testing**: Vitest (unit) + Playwright (E2E)
+- **Styling**: Vanilla CSS with keyframe animations, HSL colors
+- **No external UI libraries** - Pure React + CSS
+
+## Project Structure
+
+```
+src/
+├── App.jsx                    # Main state machine & routing
+├── main.jsx                   # React entry point
+├── components/
+│   ├── arena/                 # Battle arena components
+│   │   ├── BattleCharacter.jsx
+│   │   ├── BattleLogs.jsx
+│   │   ├── FlyingFlowerArena.jsx
+│   │   └── PoetryStage.jsx
+│   ├── screens/               # Game flow screens
+│   │   ├── BattleResult.jsx
+│   │   ├── KeywordSelection.jsx
+│   │   └── ModeSelection.jsx
+│   ├── ui/                    # UI components
+│   │   ├── FloatingDamage.jsx
+│   │   ├── HealthBar.jsx
+│   │   └── SkillIndicator.jsx
+│   ├── CharacterSelector.jsx
+│   └── ThemeSelector.jsx
+├── core/
+│   ├── BattleEngine.js        # Core game logic
+│   └── BattleEngine.test.js
+├── data/
+│   ├── index.js               # Theme exports
+│   ├── poetTheme.js           # Poet characters & skills
+│   ├── poetryDatabase.js      # Flying Flower poem library
+│   └── warriorTheme.js        # Warrior characters & skills
+├── hooks/
+│   ├── useAnimations.js       # Animation state management
+│   ├── useBattleState.js      # Battle state hooks
+│   └── useKeyboardControls.js # Keyboard input handling
+├── services/
+│   ├── battleService.js       # Battle orchestration
+│   └── speechService.js       # TTS integration
+└── utils/
+    ├── animationUtils.js
+    ├── damageUtils.js
+    └── poetryUtils.js
+```
+
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Run unit tests (Vitest)
+npm test
+
+# Run E2E tests (Playwright)
+npm run test:e2e
+
+# Lint code
+npm run lint
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+```
+
+## Battle Engine
+
+Located in [`src/core/BattleEngine.js`](src/core/BattleEngine.js):
+- `executeAction()`: Handles warrior mode combat actions
+- `executeFFAction()`: Handles Flying Flower mode poetry battles
+- Damage formula: `baseDamage × multiplier × variance(0.9-1.1) - defender.defense`
+- Poetry validation via `validateLine()` for keyword checking
+
+## Adding Content
+
+### New Theme
+1. Create theme data in `src/data/[theme]Theme.js`
+2. Add to `ALL_THEMES` in `src/data/index.js`
+3. Add images to `public/themes/[theme]/`
+
+### New Character
+Add to theme's `characters` object with:
+```javascript
+{
+    name, title, hp, maxHp, atk, def, spd,
+    isPoet: boolean,
+    skills: [{ name, damage, verse?, effect?, prob? }],
+    portrait: string,
+    combatImg: string,
+    attackImages?: { 0, 1, 2, basic }  // Warrior attack poses
+}
+```
+
+### New Poetry Keyword
+Add to `COMMON_KEYWORDS` and `poetryDB` in `src/data/poetryDatabase.js`
+
+## License
+
+MIT
