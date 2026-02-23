@@ -1,16 +1,63 @@
-# React + Vite
+# 关公战秦琼 (Guan Yu vs Qin Qiong)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+一个基于 **React** 和 **Vite** 开发的巅峰决战小游戏。穿越时空的限制，让三国武圣关羽与唐代名将秦琼在沙场一决高下。
 
-Currently, two official plugins are available:
+![Game Preview](public/arena_bg.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🎮 游戏特色
 
-## React Compiler
+- **史诗对决**：武圣关羽 vs 门神秦琼。
+- **动态战斗引擎**：支持多种技能、普通攻击以及位移（跳跃、冲刺、躲闪）。
+- **写实风动画**：基于真实比例的角色立绘，配合精心调教的 CSS3 动作序列。
+- **沉浸式 UI**：采用现代毛玻璃质感（Glassmorphism）设计，提供丝滑的交互体验。
+- **实时战斗记录**：详细记录每一次招式的碰撞。
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## ⌨️ 操作说明
 
-## Expanding the ESLint configuration
+游戏支持双人同屏对战：
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 1P - 关羽 (左侧)
+| 按键 | 功能 |
+| :--- | :--- |
+| **Q / E** | 向后 / 向前移动 |
+| **W / R** | 跳跃 / 躲闪 |
+| **A / S / D** | 释放技能 (青龙斩 / 威震华夏 / 单刀赴会) |
+| **F** | 普通攻击 |
+
+### 2P - 秦琼 (右侧)
+| 按键 | 功能 |
+| :--- | :--- |
+| **U / O** | 向后 / 向前移动 |
+| **I / P** | 跳跃 / 躲闪 |
+| **H / J / K** | 释放技能 (撒手锏 / 马踏黄河 / 双锏无双) |
+| **L** | 普通攻击 |
+
+## 🛠️ 技术栈
+
+- **前端框架**: React (Hooks, Refs)
+- **构建工具**: Vite
+- **动画/样式**: Vanilla CSS (Keyframe Animations, HSL Colors)
+- **图形资源**: 
+  - 角色立绘：高质量动态 Pose
+  - 打击感：浮动伤害数值与击退效果
+
+## 🚀 快速开始
+
+1. **安装依赖**：
+   ```bash
+   npm install
+   ```
+
+2. **启动开发服务器**：
+   ```bash
+   npm run dev
+   ```
+
+3. **构建生产版本**：
+   ```bash
+   npm run build
+   ```
+
+## 📄 许可证
+
+基于 MIT 协议开源。
