@@ -12,7 +12,7 @@ export const characters = {
             { name: "威震华夏", damage: 1.2, effect: "降低敌方防御", prob: 0.5 },
             { name: "单刀赴会", damage: 2.0, effect: "必杀技", prob: 1.0 }
         ],
-        portrait: "/guan_yu.webp"
+        portrait: "/guan_yu.png"
     },
     qinQiong: {
         name: "秦琼",
@@ -27,7 +27,7 @@ export const characters = {
             { name: "马踏黄河", damage: 1.3, effect: "提高自身速度", prob: 0.4 },
             { name: "双锏无双", damage: 2.2, effect: "必杀技", prob: 1.0 }
         ],
-        portrait: "/qin_qiong.webp"
+        portrait: "/qin_qiong.png"
     }
 };
 

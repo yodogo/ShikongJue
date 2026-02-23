@@ -324,18 +324,34 @@ h3 {
 }
 
 @keyframes basic {
-  0% {
-    transform: translateX(0) rotate(0deg);
-  }
+  0% { transform: translateX(0) rotate(0deg); }
+  40% { transform: translateX(80px) rotate(15deg) scale(1.05); filter: brightness(1.2); }
+  100% { transform: translateX(0) rotate(0deg); }
+}
 
-  40% {
-    transform: translateX(80px) rotate(15deg) scale(1.05);
-    filter: brightness(1.2);
-  }
+@keyframes jump {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-120px) scaleY(0.9); }
+  100% { transform: translateY(0); }
+}
 
-  100% {
-    transform: translateX(0) rotate(0deg);
-  }
+@keyframes moveForward {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(100px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes moveBackward {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(-85px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes dodge {
+  0% { transform: translateX(0) skew(0deg); opacity: 1; }
+  25% { transform: translateX(-40px) skew(-15deg); opacity: 0.6; filter: blur(2px); }
+  75% { transform: translateX(-40px) skew(-15deg); opacity: 0.6; filter: blur(2px); }
+  100% { transform: translateX(0) skew(0deg); opacity: 1; }
 }
 
 .anim-idle {
@@ -365,6 +381,26 @@ h3 {
   animation: basic 0.4s ease-out forwards;
   transform-origin: bottom center;
   z-index: 10;
+}
+
+.anim-jump {
+  animation: jump 0.6s cubic-bezier(0.45, 0, 0.55, 1) forwards;
+  transform-origin: bottom center;
+}
+
+.anim-forward {
+  animation: moveForward 0.4s ease-out forwards;
+  transform-origin: bottom center;
+}
+
+.anim-backward {
+  animation: moveBackward 0.4s ease-out forwards;
+  transform-origin: bottom center;
+}
+
+.anim-dodge {
+  animation: dodge 0.4s ease-in-out forwards;
+  transform-origin: bottom center;
 }
 
 .realistic-char {

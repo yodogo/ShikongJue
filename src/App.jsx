@@ -33,9 +33,20 @@ function App() {
 
       const key = e.key.toLowerCase();
 
-      // Player 1 (Left) Controls: A, S, D (skills 0,1,2), F (attack)
-      if (['a', 's', 'd', 'f'].includes(key)) {
-        if (p1State !== 'idle' || p2State !== 'idle') return; // Cooldown/Block during animation
+      // Player 1 (Left) Controls
+      if (['a', 's', 'd', 'f', 'q', 'w', 'e', 'r'].includes(key)) {
+        if (p1State !== 'idle' || p2State !== 'idle') return;
+
+        if (['q', 'w', 'e', 'r'].includes(key)) {
+          let state = 'idle';
+          if (key === 'q') state = 'move_back';
+          if (key === 'w') state = 'jump';
+          if (key === 'e') state = 'move_forward';
+          if (key === 'r') state = 'dodge';
+          setP1State(state);
+          setTimeout(() => setP1State('idle'), 600);
+          return;
+        }
 
         let actionParams = null;
         if (key === 'a') actionParams = ['skill', 0];
@@ -46,9 +57,20 @@ function App() {
         executeCombatSequence(playerChar.name, actionParams, 1);
       }
 
-      // Player 2 (Right) Controls: H, J, K (skills 0,1,2), L (attack)
-      if (['h', 'j', 'k', 'l'].includes(key)) {
-        if (p1State !== 'idle' || p2State !== 'idle') return; // Cooldown/Block during animation
+      // Player 2 (Right) Controls
+      if (['h', 'j', 'k', 'l', 'u', 'i', 'o', 'p'].includes(key)) {
+        if (p1State !== 'idle' || p2State !== 'idle') return;
+
+        if (['u', 'i', 'o', 'p'].includes(key)) {
+          let state = 'idle';
+          if (key === 'u') state = 'move_back';
+          if (key === 'i') state = 'jump';
+          if (key === 'o') state = 'move_forward';
+          if (key === 'p') state = 'dodge';
+          setP2State(state);
+          setTimeout(() => setP2State('idle'), 600);
+          return;
+        }
 
         let actionParams = null;
         if (key === 'h') actionParams = ['skill', 0];
@@ -193,18 +215,32 @@ function App() {
                     }
                   } else if (p1State === 'hit') {
                     animClass = 'anim-hit';
+                  } else if (p1State === 'jump') {
+                    animClass = 'anim-jump';
+                  } else if (p1State === 'move_forward') {
+                    animClass = 'anim-forward';
+                  } else if (p1State === 'move_back') {
+                    animClass = 'anim-backward';
+                  } else if (p1State === 'dodge') {
+                    animClass = 'anim-dodge';
                   }
                   return <img className={animClass} src={imgSrc} style={{ width: '450px' }} alt="player" />;
                 })()}
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', marginTop: '1rem' }}>
                 <h3>{playerChar.name}</h3>
-                <span style={{ color: 'var(--text-dim)', fontSize: '0.8rem' }}>1P 操作: A S D F</span>
+                <span style={{ color: 'var(--text-dim)', fontSize: '0.8rem' }}>1P: QWER移动 / ASDF攻击</span>
               </div>
               <div className="hp-bar-container">
                 <div className="hp-bar-fill" style={{ width: `${(playerChar.hp / playerChar.maxHp) * 100}%` }}></div>
               </div>
               <p style={{ margin: '0.5rem 0' }}>HP: {playerChar.hp} / {playerChar.maxHp}</p>
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '0.5rem' }}>
+                <span style={{ background: '#222', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem' }}>Q: 后退</span>
+                <span style={{ background: '#222', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem' }}>W: 跳跃</span>
+                <span style={{ background: '#222', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem' }}>E: 前进</span>
+                <span style={{ background: '#222', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem' }}>R: 躲闪</span>
+              </div>
               <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
                 <span style={{ background: '#333', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.8rem', opacity: p1State !== 'idle' ? 0.5 : 1 }}>A: {playerChar.skills[0].name}</span>
                 <span style={{ background: '#333', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.8rem', opacity: p1State !== 'idle' ? 0.5 : 1 }}>S: {playerChar.skills[1].name}</span>
@@ -236,18 +272,32 @@ function App() {
                     }
                   } else if (p2State === 'hit') {
                     animClass = 'anim-hit';
+                  } else if (p2State === 'jump') {
+                    animClass = 'anim-jump';
+                  } else if (p2State === 'move_forward') {
+                    animClass = 'anim-forward';
+                  } else if (p2State === 'move_back') {
+                    animClass = 'anim-backward';
+                  } else if (p2State === 'dodge') {
+                    animClass = 'anim-dodge';
                   }
                   return <img className={animClass} src={imgSrc} style={{ width: '450px' }} alt="enemy" />;
                 })()}
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', marginTop: '1rem' }}>
-                <span style={{ color: 'var(--text-dim)', fontSize: '0.8rem' }}>2P 操作: H J K L</span>
+                <span style={{ color: 'var(--text-dim)', fontSize: '0.8rem' }}>2P: UIOP移动 / HJKL攻击</span>
                 <h3>{enemyChar.name}</h3>
               </div>
               <div className="hp-bar-container">
                 <div className="hp-bar-fill" style={{ width: `${(enemyChar.hp / enemyChar.maxHp) * 100}%` }}></div>
               </div>
               <p style={{ margin: '0.5rem 0' }}>HP: {enemyChar.hp} / {enemyChar.maxHp}</p>
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '0.5rem' }}>
+                <span style={{ background: '#222', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem' }}>U: 后退</span>
+                <span style={{ background: '#222', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem' }}>I: 跳跃</span>
+                <span style={{ background: '#222', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem' }}>O: 前进</span>
+                <span style={{ background: '#222', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem' }}>P: 躲闪</span>
+              </div>
               <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
                 <span style={{ background: '#333', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.8rem', opacity: p2State !== 'idle' ? 0.5 : 1 }}>H: {enemyChar.skills[0].name}</span>
                 <span style={{ background: '#333', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.8rem', opacity: p2State !== 'idle' ? 0.5 : 1 }}>J: {enemyChar.skills[1].name}</span>
