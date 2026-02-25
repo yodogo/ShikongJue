@@ -66,7 +66,7 @@ export class BattleEngine {
 
         if (defender.hp <= 0) {
             const victoryMsg = attacker.isPoet ?
-                `${defender.name} 词穷力竭！ ${attacker.name} 获得了胜利！` :
+                `${defender.name} 词穷力竭！ ${attacker.name} 获得了胜利！` :  
                 `${defender.name} 倒下了！ ${attacker.name} 获得了胜利！`;
             this.logs.push(victoryMsg);
             return { status: "finished", winner: attacker, logs: this.logs, damageDealt: damage, verse: verse };
@@ -94,7 +94,7 @@ export class BattleEngine {
         this.logs.push(`对 ${defender.name} 造成了 ${damage} 点心神冲击！`);
 
         if (defender.hp <= 0) {
-            this.logs.push(`${defender.name} 词穷力竭！ ${attacker.name} 在文坛大胜！`);
+            this.logs.push(`${defender.name} 倒下了！ ${attacker.name} 获得了胜利！`);
             return { status: "finished", winner: attacker, logs: this.logs, damageDealt: damage, verse: verse };
         }
 

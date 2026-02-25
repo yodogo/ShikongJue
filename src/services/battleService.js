@@ -143,7 +143,7 @@ class BattleService {
         onLogAdd,
     }) {
         // Player's turn
-        await this.executeFFAction({
+        const playerResult = await this.executeFFAction({
             battleInstance,
             attackerName: playerChar.name,
             verse,
@@ -156,6 +156,11 @@ class BattleService {
             onInkSplash,
             onBattleEnd,
         });
+
+        // If battle ended during player's turn, don't continue
+        if (playerResult.status === 'finished') {
+            return;
+        }
 
         // Update player hand
         const nextHand = playerHand.filter(h => h.text !== verse);
@@ -170,8 +175,8 @@ class BattleService {
                 onHandUpdate(newVerses);
                 onLogAdd(`诗库扩充！新增 ${newVerses.length} 首诗句`);
             } else {
-                onLogAdd(`${playerChar.name} 词穷了！`);
-                setTimeout(() => onBattleEnd(battleInstance.charB), 1500);
+                onLogAdd(`${playerChar.name} 词穷了！${battleInstance.charB.name} 在文坛大胜！`);
+                onBattleEnd(battleInstance.charB);
                 return;
             }
         }
@@ -204,8 +209,8 @@ class BattleService {
                 onBattleEnd,
             });
         } else {
-            onLogAdd(`${enemyChar.name} 词穷了！`);
-            setTimeout(() => onBattleEnd(playerChar), 1500);
+            onLogAdd(`${enemyChar.name} 词穷了！${playerChar.name} 在文坛大胜！`);
+            onBattleEnd(playerChar);
         }
     }
 }

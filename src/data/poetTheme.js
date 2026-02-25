@@ -1,9 +1,14 @@
+import liBaiPng from '../assets/themes/poet/li_bai.png';
+import suShiPng from '../assets/themes/poet/su_shi.png';
+import poetCoverPng from '../assets/themes/poet/cover.png';
+import arenaBgPng from '../assets/arena_bg.png';
+
 export const poetTheme = {
     id: 'poet',
     name: "文争：李白对苏轼",
     description: "千古一瞬的文坛较量：诗仙 vs 词圣",
-    background: "/arena_bg.png", // Could be a different one later
-    cover: '/themes/poet/cover.png',
+    background: arenaBgPng,
+    cover: poetCoverPng,
     characters: {
         liBai: {
             name: "李白",
@@ -19,8 +24,8 @@ export const poetTheme = {
                 { name: "蜀道难", damage: 1.5, verse: "蜀道之难，难于上青天。" },
                 { name: "行路难", damage: 2.2, verse: "长风破浪会有时，直挂云帆济沧海。" }
             ],
-            portrait: "/themes/poet/li_bai.png",
-            combatImg: "/themes/poet/li_bai.png",
+            portrait: liBaiPng,
+            combatImg: liBaiPng,
             needsFlip: false
         },
         suShi: {
@@ -37,8 +42,8 @@ export const poetTheme = {
                 { name: "明月几时有", damage: 1.4, verse: "明月几时有？把酒问青天。" },
                 { name: "定风波", damage: 2.0, verse: "回首向来萧瑟处，归去，也无风雨也无晴。" }
             ],
-            portrait: "/themes/poet/su_shi.png",
-            combatImg: "/themes/poet/su_shi.png",
+            portrait: suShiPng,
+            combatImg: suShiPng,
             needsFlip: true
         }
     }
