@@ -2,7 +2,7 @@
 
 A React-based web game featuring cross-temporal battles between legendary Chinese historical figures. Engage in epic combat between warriors from different eras, or witness poetic duels between renowned literary masters.
 
-![Theme Selection Screen](public/theme_selection.png)
+![Theme Selection Screen](src/assets/theme_selection.png)
 
 ## Game Features
 
@@ -71,7 +71,7 @@ Same controls as Warrior Mode - skills trigger poetry-based attacks.
 
 ### Poet Mode - Flying Flower (飞花令, Turn-based)
 
-Click poetry cards to select verses containing the required keyword (月, 花, 酒, 春). The AI opponent will automatically respond with matching verses from the poetry database.
+Click poetry cards to select verses containing the required keyword. Available keywords: **月, 花, 酒, 春, 风, 山, 水**. The AI opponent will automatically respond with matching verses from the poetry database.
 
 ## Tech Stack
 
@@ -85,6 +85,13 @@ Click poetry cards to select verses containing the required keyword (月, 花, �
 
 ```
 src/
+├── assets/                    # Game images and assets
+│   ├── arena_bg.png
+│   ├── battle_preview.png
+│   ├── theme_selection.png
+│   └── themes/                # Theme-specific character images
+│       ├── poet/              # Poet character portraits
+│       └── warrior/           # Warrior character portraits & attack poses
 ├── App.jsx                    # Main state machine & routing
 ├── main.jsx                   # React entry point
 ├── components/
@@ -103,6 +110,8 @@ src/
 │   │   └── SkillIndicator.jsx
 │   ├── CharacterSelector.jsx
 │   └── ThemeSelector.jsx
+├── constants/
+│   └── gameStates.js          # Game states, animation states, control mappings
 ├── core/
 │   ├── BattleEngine.js        # Core game logic
 │   └── BattleEngine.test.js
@@ -162,7 +171,7 @@ Located in [`src/core/BattleEngine.js`](src/core/BattleEngine.js):
 ### New Theme
 1. Create theme data in `src/data/[theme]Theme.js`
 2. Add to `ALL_THEMES` in `src/data/index.js`
-3. Add images to `public/themes/[theme]/`
+3. Add images to `src/assets/themes/[theme]/`
 
 ### New Character
 Add to theme's `characters` object with:

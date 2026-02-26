@@ -96,7 +96,7 @@ Character animations are CSS classes controlled by state:
 
 ### Poetry Database
 
-`src/data/poetryDatabase.js` contains classical Chinese poems organized by keywords (月, 花, 酒, 春). Used for Flying Flower mode AI opponent responses.
+`src/data/poetryDatabase.js` contains classical Chinese poems organized by keywords (月, 花, 酒, 春, 风, 山, 水). Used for Flying Flower mode AI opponent responses.
 
 ## Visual Effects
 
@@ -110,7 +110,7 @@ Character animations are CSS classes controlled by state:
 ### New Theme
 1. Create theme data file in `src/data/`
 2. Add to `ALL_THEMES` array in `App.jsx`
-3. Add character images to `public/themes/[theme]/`
+3. Add character images to `src/assets/themes/[theme]/`
 
 ### New Character
 Add to theme's `characters` object with required properties. Warriors should include `attackImages` for skill poses.

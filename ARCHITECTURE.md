@@ -8,7 +8,14 @@ This is a React-based web game featuring dual-mode battles (Warrior and Poet mod
 
 ```
 src/
-├── constants/           # Game constants and configuration
+├── assets/             # Game images and assets
+│   ├── arena_bg.png
+│   ├── battle_preview.png
+│   ├── theme_selection.png
+│   └── themes/         # Theme-specific character images
+│       ├── poet/       # Poet character portraits
+│       └── warrior/    # Warrior character portraits & attack poses
+├── constants/          # Game constants and configuration
 │   └── gameStates.js   # Game states, animation states, control mappings
 ├── hooks/              # Custom React hooks
 │   ├── useBattleState.js       # Battle state management
@@ -25,7 +32,7 @@ src/
 │   ├── index.js        # Central export for all themes
 │   ├── warriorTheme.js # Warrior theme data
 │   ├── poetTheme.js    # Poet theme data
-│   └── poetryDatabase.js # Poetry library for FF mode
+│   └── poetryDatabase.js # Poetry library for FF mode (7 keywords: 月, 花, 酒, 春, 风, 山, 水)
 ├── core/               # Core game logic
 │   ├── BattleEngine.js # Battle calculation engine
 │   └── BattleEngine.test.js # Unit tests
@@ -45,7 +52,7 @@ src/
 │       ├── HealthBar.jsx
 │       ├── FloatingDamage.jsx
 │       └── SkillIndicator.jsx
-├── styles/             # Modular CSS
+├── styles/             # Modular CSS (or single index.css file)
 │   ├── variables.css   # CSS variables
 │   ├── base.css        # Base styles
 │   ├── components.css  # Component styles
